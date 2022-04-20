@@ -29,4 +29,42 @@
   cursor: pointer;
 }
 
+.form-button {
+  padding: 20px;
+  background-color: rgba(0, 128, 0, 0.577);
+  width: 100%;
+  margin-top: 20px;
+}
+
+.form-box {
+  width: fit-content;
+  margin: auto;
+}
+.form-box .input_error .form-box.p_error {
+  border-color: red;
+  color: red;
+}
+.form-box textarea {
+  margin-top: 16px;
+  width: 100%;
+}
+.form-box p {
+  display: flex;
+  justify-content: space-between;
+}
+.form-box .p_error {
+  color: red;
+  border: 1px solid red;
+}
+.form-box .error-text {
+  color: red;
+}
+
+.box-next-ex {
+  display: none;
+}
+.box-next-ex span {
+  color: black;
+}
+
 /*# sourceMappingURL=main.css.map */
