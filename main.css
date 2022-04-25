@@ -1,11 +1,10 @@
-.products {
+.goods-list {
   background-color: cornflowerblue;
   width: fit-content;
   padding: 14px 24px;
-  margin: auto;
 }
 
-.product_card {
+.goods-item {
   padding: 16px;
   width: 300px;
   border: 1px solid gray;
@@ -14,57 +13,19 @@
   text-align: center;
   background-color: white;
 }
-.product_card .product_title {
+.goods-item .product_title {
   margin-top: 0;
   font-size: 24px;
 }
-.product_card .product_price {
+.goods-item .product_price {
   font-size: 18px;
 }
-.product_card .product_button {
+.goods-item .product_button {
   width: 100%;
   padding: 12px;
   border-radius: 6px;
   background-color: transparent;
   cursor: pointer;
-}
-
-.form-button {
-  padding: 20px;
-  background-color: rgba(0, 128, 0, 0.577);
-  width: 100%;
-  margin-top: 20px;
-}
-
-.form-box {
-  width: fit-content;
-  margin: auto;
-}
-.form-box .input_error .form-box.p_error {
-  border-color: red;
-  color: red;
-}
-.form-box textarea {
-  margin-top: 16px;
-  width: 100%;
-}
-.form-box p {
-  display: flex;
-  justify-content: space-between;
-}
-.form-box .p_error {
-  color: red;
-  border: 1px solid red;
-}
-.form-box .error-text {
-  color: red;
-}
-
-.box-next-ex {
-  display: none;
-}
-.box-next-ex span {
-  color: black;
 }
 
 /*# sourceMappingURL=main.css.map */

@@ -6,36 +6,28 @@
   <link type="text/css" href="main.css" rel="stylesheet">
 </head>
 <body>
-<main class="products"></main>
-
-<div class="form-box">
-  <h1 style="text-align: center">Форма обратной связи</h1>
-  <form name="regform">
-    <h2 id="form-box__area__headline"></h2>
-    <p>Имя:
-      <label>
-        <input type="text" size=65 name="name" class="form-box__area">
-      </label>
-    </p>
-    <span class="error-text form-box__area"></span>
-    <p>E-mail:
-      <label>
-        <input type="text" size=65 name="email" class="form-box__area">
-      </label>
-    </p>
-    <span class="error-text form-box__area"></span>
-    <p>Телефон:
-      <label>
-        <input type="text" size=65 name="number" class="form-box__area">
-      </label>
-    </p>
-    <span class="error-text form-box__area"></span>
-    <textarea rows="4" class="form-box__area"></textarea>
-    <br>
-    <button type="submit" name="submitButton" class="form-button">Отправить</button>
-  </form>
-</div>
-
 <script type="module" src="script.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
+<div id="app">
+  <header>
+    <input type="text" class="goods-search" v-model="searchLine" />
+    <button class="search-button" type="button" @click="filterGoods">Искать</button>
+    <button class="cart-button" type="button" @click="handleCart">Корзина</button>
+  </header>
+  <main>
+    <div class="goods-list">
+      <p v-if="!filteredGoods.length">Нет данных</p>
+      <div class="goods-item" v-for="good in filteredGoods">
+        <h3 class="product_title">{{ good.product_name }}</h3>
+        <p class="product_price">{{ good.price }}</p>
+      </div>
+    </div>
+    <div class="cart-list" v-if="visibleCart">
+      <div class="cart-item">
+        <h3>~~~Cart block~~~</h3>
+      </div>
+    </div>
+  </main>
+</div>
 </body>
 </html>
