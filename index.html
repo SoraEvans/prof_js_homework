@@ -10,23 +10,13 @@
 <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
 <div id="app">
   <header>
-    <input type="text" class="goods-search" v-model="searchLine" />
-    <button class="search-button" type="button" @click="filterGoods">Искать</button>
-    <button class="cart-button" type="button" @click="handleCart">Корзина</button>
+    <header-vue :search-value="searchLine" :goods="goods"></header-vue>
   </header>
   <main>
-    <div class="goods-list">
-      <p v-if="!filteredGoods.length">Нет данных</p>
-      <div class="goods-item" v-for="good in filteredGoods">
-        <h3 class="product_title">{{ good.product_name }}</h3>
-        <p class="product_price">{{ good.price }}</p>
-      </div>
-    </div>
-    <div class="cart-list" v-if="visibleCart">
-      <div class="cart-item">
-        <h3>~~~Cart block~~~</h3>
-      </div>
-    </div>
+    <goods-list :goods="filteredGoods" :alert="visibleAlert">
+      <data-alert v-if="visibleAlert"></data-alert>
+    </goods-list>
+    <cart-list v-if="visibleCart"></cart-list>
   </main>
 </div>
 </body>
