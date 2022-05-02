@@ -16,7 +16,7 @@
     <goods-list :goods="filteredGoods" :alert="visibleAlert">
       <data-alert v-if="visibleAlert"></data-alert>
     </goods-list>
-    <cart-list v-if="visibleCart"></cart-list>
+    <cart-list v-if="visibleCart" :carts="carts"></cart-list>
   </main>
 </div>
 </body>
