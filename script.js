@@ -6,7 +6,8 @@ const app = new Vue({
     searchLine: '',
     API_URL: 'https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses',
     visibleCart: false,
-    visibleAlert: false
+    visibleAlert: false,
+    carts: []
   },
   methods: {
     makeGETRequest(url) {
@@ -23,15 +24,44 @@ const app = new Vue({
           }
         }
         xhr.open('GET', url, true);
+        xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
         xhr.send();
       })
     },
+    makePOSTRequest(url, data) {
+      return new Promise(resolve => {
+        let xhr;
+        if (window.XMLHttpRequest) {
+          xhr = new XMLHttpRequest();
+        } else if (window.ActiveXObject) {
+          xhr = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState === 4) {
+            console.log('xhr.responseText', xhr.responseText)
+            resolve(xhr.responseText);
+          }
+        }
+        xhr.open('POST', url, true);
+        xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+        xhr.send(data);
+      })
+    },
+    updateCart() {
+      this.makeGETRequest('/cartData')
+        .then(r => {
+          this.carts = JSON.parse(r);
+        });
+    }
   },
   mounted() {
-    this.makeGETRequest(`${this.API_URL}/catalogData.json`)
+    this.makeGETRequest(`/catalogData`)
       .then(r => {
-        this.goods = JSON.parse(r);
-        this.filteredGoods = JSON.parse(r);
+        this.goods = JSON.parse(r).map(item => {
+          return {...item, id: Math.floor(Math.random() * (1 - 10000)) + 10000 }
+        });
+        this.filteredGoods = this.goods;
+        this.updateCart();
       })
       .catch(() => this.visibleAlert = true);
   }
@@ -54,19 +84,56 @@ Vue.component('goods-item', {
     <div class="goods-item">
       <h3>{{ good.product_name }}</h3>
       <p>{{ good.price }}</p>
+      <button @click="addToCart">Add product</button>
     </div>
-  `
+  `,
+  methods: {
+    addToCart() {
+      app.goods.forEach((item) => {
+        if (this.good.id === item.id) {
+          this.good.id = Math.floor(Math.random() * (1 - 10000)) + 10000
+          app.makePOSTRequest('/addToCart', JSON.stringify(this.good))
+            .then(() => app.updateCart());
+        }
+      });
+    }
+  }
 });
 
 Vue.component('cart-list', {
+  props: ['carts'],
   template: `
     <div class="cart-list">
-      <div class="cart-item">
-        <h3>~~~Cart block~~~</h3>
-      </div>
+      <h3>Cart List</h3>
+      <cart-item v-for="cart in carts" :cart="cart"></cart-item>
     </div>
   `
 })
+
+Vue.component('cart-item', {
+  props: ['cart'],
+  template: `
+    <div class="goods-item">
+      <h3>{{ cart.product_name }}</h3>
+      <p>{{ cart.price }}</p>
+      <button :id="cart.id" @click="removeToCart">&times;</button>
+    </div>
+  `,
+  methods: {
+    removeToCart(event) {
+      let getIdElement;
+      app.carts.forEach(function (item, i) {
+        let thisId = item.id;
+        if (+event.target.id === thisId) {
+          getIdElement = i;
+        }
+      });
+      app.carts.splice(getIdElement, 1);
+      app.makePOSTRequest('/updateCart', JSON.stringify(app.carts))
+        .then(() => app.updateCart());
+    }
+  }
+});
 
 Vue.component('data-alert', {
   template: `
