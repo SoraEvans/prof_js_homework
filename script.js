@@ -24,35 +24,52 @@ class GoodsItem {
     this.price = price;
   }
 
-  render = () => `
-    <div class="product_card">
-      <h3 class="product_title">${this.title}</h3>
-      <p class="product_price">${this.price}$</p>
-      <button class="product_button">Добавить</button>
-    </div>
-  `
+  render() {
+    return `
+      <div class="product_card">
+        <h3 class="product_title">${this.title}</h3>
+        <p class="product_price">${this.price}$</p>
+        <button data-action="add" class="product_button">Добавить</button>
+      </div>
+    `
+  }
 }
 
 class GoodsList {
-  constructor() {
+  constructor(elem) {
     this.goods = [];
+    elem.onclick = this.onClick.bind(this);
   }
 
-  fetchGoods = () => new Promise(resolve => resolve(
-    makeGETRequest(`${API_URL}/catalogData.json`).then(res => this.goods = JSON.parse(res))
-  ))
+  fetchGoods() {
+    return new Promise(resolve => resolve(
+      makeGETRequest(`${API_URL}/catalogData.json`).then(res => this.goods = JSON.parse(res))
+    ))
+  }
 
-  render = () => new Promise(resolve => {
+  render() {
     let listHtml = '';
     this.goods.forEach(({ product_name, price }) => {
       const goodItem = new GoodsItem(product_name, price);
       listHtml += goodItem.render();
     });
-    resolve(document.querySelector('.products').innerHTML = listHtml);
-  })
+    console.log('All price: ', this.getSumPrice())
+    document.querySelector('.products').innerHTML = listHtml
+  }
+
+  add() {
+    makeGETRequest(`${API_URL}/addToBasket.json?id=1`);
+  }
+
+  onClick(event) {
+    let action = event.target.dataset.action;
+    if (action) {
+      this[action]();
+    }
+  }
 
   getSumPrice() {
-    console.log(this.goods.reduce((sum, { price }) => sum + price, 0))
+    return this.goods.reduce((sum, { price }) => sum + price, 0)
   }
 }
 
@@ -94,13 +111,8 @@ class CartList {
   }
 }
 
-const list = new GoodsList();
+const elem = document.querySelector('.products')
 
-list.fetchGoods()
-  .then(() => list.render()
-    .then(() => document.querySelectorAll('.product_button').forEach(item =>
-      item.addEventListener('click', () => makeGETRequest(`${API_URL}/addToBasket.json?id=1`))
-    ))
-  );
+const list = new GoodsList(elem);
 
-list.getSumPrice()
+list.fetchGoods().then(() => list.render());
